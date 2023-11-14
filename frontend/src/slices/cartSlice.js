@@ -34,6 +34,23 @@ const cartSlice = createSlice({
       state.paymentMethod = action.payload;
       return updateCart(state);
     },
+    clearCartItems: (state, action) => {
+      state.cartItems = [];
+      localStorage.setItem('cart', JSON.stringify(state));
+    },
+    // NOTE: here we need to reset state for when a user logs out so the next
+    // user doesn't inherit the previous users cart and shipping
+    resetCart: (state) => {
+      // Reset the cart to its initial state
+      state.cartItems = [];
+      state.shippingAddress = {};
+      state.paymentMethod = 'Paypal';
+
+      // Update localStorage to reflect the initial state
+      localStorage.setItem('cart', JSON.stringify(initialState));
+
+      return state; // Return the modified state
+    },
   },
 });
 
@@ -42,6 +59,8 @@ export const {
   removeFromCart,
   saveShippingAddress,
   savePaymentMethod,
+  clearCartItems,
+  resetCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
